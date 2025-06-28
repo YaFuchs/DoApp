@@ -2,17 +2,17 @@
 
 import React, { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { createPageUrl } from "./utils";
+import { createPageUrl } from "../utils";
 import { User } from '@/api/entities';
-import DataManager from "./components/DataManager";
+import DataManager from "../components/DataManager";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
-import WeekStartBottomSheet from "./components/WeekStartBottomSheet";
-import NotificationConfirmDialog from "./components/NotificationConfirmDialog";
-import notificationManager from "./components/NotificationManager";
+import WeekStartBottomSheet from "../components/WeekStartBottomSheet";
+import NotificationConfirmDialog from "../components/NotificationConfirmDialog";
+import notificationManager from "../components/NotificationManager";
 import { LayoutList, CheckSquare, Menu, UserCircle2, X } from "lucide-react";
-import SettingsModal from "./components/SettingsModal"; // Assuming SettingsModal is in components
-import StatisticsModal from "./components/StatisticsModal"; // Import the new modal
+import SettingsModal from "../components/SettingsModal"; // Assuming SettingsModal is in components
+import StatisticsModal from "../components/StatisticsModal"; // Import the new modal
 
 const navItems = [
   { href: "/Dashboard", icon: LayoutList, label: "Habits" },
