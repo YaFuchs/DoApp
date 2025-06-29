@@ -18,14 +18,18 @@ const baseUser = base44.auth;
 
 // When developing locally, bypass authentication by returning a mock user and
 // stubbing out login/logout methods. This allows the app to run without hitting
-// the real auth endpoints.
+// the real auth endpoints. Auth can be disabled either when running the Vite
+// dev server or by setting the VITE_DISABLE_AUTH env variable to "true".
 const devUser = {
   id: 'local-dev',
   email: 'test@example.com',
   name: 'Test User',
 };
 
-export const User = import.meta.env.DEV
+const isDev = import.meta.env.DEV;
+const disableAuth = isDev || import.meta.env.VITE_DISABLE_AUTH === 'true';
+
+export const User = disableAuth
   ? {
       async me() {
         window.user = devUser;
