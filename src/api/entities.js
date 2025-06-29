@@ -127,6 +127,16 @@ export const UserHabit = authDisabled
         mockHabits.push(newHabit);
         return newHabit;
       },
+      async create(data) {
+        const newHabit = {
+          ...data,
+          id: `mock-${Date.now()}`,
+          created_date: new Date().toISOString(),
+          updated_date: new Date().toISOString(),
+        };
+        mockHabits.push(newHabit);
+        return newHabit;
+      },
       async updateHabit(id, changes) {
         const index = mockHabits.findIndex((h) => h.id === id);
         if (index !== -1) {
