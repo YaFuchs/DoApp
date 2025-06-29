@@ -210,19 +210,27 @@ export default function TabManagementModal({ isOpen, onClose, tabs, onSaveTabs }
                               {...provided.draggableProps}
                               className="relative"
                             >
-                              {confirmingDeleteTabId === tab.id && (
-                                <div className="absolute inset-0 flex justify-end items-center pr-4 bg-red-500 rounded-lg z-10">
-                                  <button
-                                    onClick={() => confirmDelete(tab)}
-                                    className="text-white text-sm font-medium px-2 py-1"
-                                    aria-label={`Approve delete ${tab.name}`}
+                              <AnimatePresence>
+                                {confirmingDeleteTabId === tab.id && (
+                                  <motion.div
+                                    initial={{ opacity: 0, x: 40 }}
+                                    animate={{ opacity: 1, x: 0 }}
+                                    exit={{ opacity: 0, x: 40 }}
+                                    transition={{ type: 'tween', duration: 0.2 }}
+                                    className="absolute inset-y-0 right-0 flex items-center pr-4 bg-red-500 rounded-lg z-0"
                                   >
-                                    Approve Delete
-                                  </button>
-                                </div>
-                              )}
+                                    <button
+                                      onClick={() => confirmDelete(tab)}
+                                      className="px-2 py-1 text-sm font-medium text-white"
+                                      aria-label={`Approve delete ${tab.name}`}
+                                    >
+                                      Approve Delete
+                                    </button>
+                                  </motion.div>
+                                )}
+                              </AnimatePresence>
                               <motion.div
-                                className={`flex items-center gap-3 p-3 bg-white border border-slate-200 rounded-lg ${snapshot.isDragging ? 'shadow-lg rotate-2' : 'shadow-sm'}`}
+                                className={`relative z-10 flex items-center gap-3 p-3 bg-white border border-slate-200 rounded-lg ${snapshot.isDragging ? 'shadow-lg rotate-2' : 'shadow-sm'}`}
                                 animate={{ x: confirmingDeleteTabId === tab.id ? -120 : 0 }}
                                 transition={{ type: 'tween', duration: 0.2 }}
                                 onClick={() => {
