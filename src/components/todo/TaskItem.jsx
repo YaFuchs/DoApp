@@ -10,6 +10,7 @@ import {
   isTomorrow,
   isDateInRange,
   compareDateStrings,
+  formatDateForDisplay,
 } from "@/components/dateUtils";
 
 const DEFAULT_CARD_SETTINGS = {
@@ -56,6 +57,7 @@ export default function TaskItem({ task, onStatusChange, onEdit, cardSettings = 
       return {
         label: "Due today",
         color: "bg-yellow-100 text-yellow-800 border-yellow-200",
+        hover: "hover:bg-yellow-100 hover:text-yellow-800 hover:border-yellow-200",
       };
     }
 
@@ -63,6 +65,7 @@ export default function TaskItem({ task, onStatusChange, onEdit, cardSettings = 
       return {
         label: "Due tomorrow",
         color: "bg-blue-100 text-blue-800 border-blue-200",
+        hover: "hover:bg-blue-100 hover:text-blue-800 hover:border-blue-200",
       };
     }
 
@@ -70,6 +73,7 @@ export default function TaskItem({ task, onStatusChange, onEdit, cardSettings = 
       return {
         label: "Overdue",
         color: "bg-red-100 text-red-800 border-red-200",
+        hover: "hover:bg-red-100 hover:text-red-800 hover:border-red-200",
       };
     }
 
@@ -82,12 +86,14 @@ export default function TaskItem({ task, onStatusChange, onEdit, cardSettings = 
           daysUntilDue === 1 ? "" : "s"
         }`,
         color: "bg-green-100 text-green-800 border-green-200",
+        hover: "hover:bg-green-100 hover:text-green-800 hover:border-green-200",
       };
     }
 
     return {
-      label: dueDate,
+      label: formatDateForDisplay(dueDate, { month: "short", day: "numeric" }),
       color: "bg-slate-100 text-slate-800 border-slate-200",
+      hover: "hover:bg-slate-100 hover:text-slate-800 hover:border-slate-200",
     };
   }
 
@@ -154,7 +160,7 @@ export default function TaskItem({ task, onStatusChange, onEdit, cardSettings = 
               {cardSettings.dueDate && task.dueDate && (() => {
                 const badge = getDueDateBadgeProps(task.dueDate);
                 return badge ? (
-                  <Badge className={`border ${badge.color}`}>
+                  <Badge className={`border ${badge.color} ${badge.hover} cursor-default`}>
                     <Calendar className="w-3 h-3 mr-1" />
                     {badge.label}
                   </Badge>
