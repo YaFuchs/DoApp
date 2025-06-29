@@ -14,4 +14,31 @@ export const UserSettings = base44.entities.UserSettings;
 
 
 // auth sdk:
-export const User = base44.auth;
+const baseUser = base44.auth;
+
+// When developing locally, bypass authentication by returning a mock user and
+// stubbing out login/logout methods. This allows the app to run without hitting
+// the real auth endpoints.
+const devUser = {
+  id: 'local-dev',
+  email: 'test@example.com',
+  name: 'Test User',
+};
+
+export const User = import.meta.env.DEV
+  ? {
+      async me() {
+        window.user = devUser;
+        return devUser;
+      },
+      async login() {
+        console.log('Bypassing login for local dev');
+        window.user = devUser;
+        return devUser;
+      },
+      async logout() {
+        console.log('Bypassing logout for local dev');
+        window.user = null;
+      },
+    }
+  : baseUser;
