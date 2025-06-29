@@ -214,7 +214,7 @@ export default function Layout({ children, currentPageName }) {
           {navItems.map((item) => {
             const isActive = location.pathname === item.href || (item.href === "/Dashboard" && location.pathname === "/");
             return (
-              <Link key={item.label} to={item.href} className={`flex flex-col items-center justify-center w-full h-full transition-colors duration-200 ${isActive ? 'text-blue-600' : 'text-slate-500 hover:text-blue-500'}`}>
+              <Link key={item.label} to={item.href} className={`flex items-center justify-center w-full h-full transition-colors duration-200 ${isActive ? 'text-blue-600' : 'text-slate-500 hover:text-blue-500'}`}>
                 <item.icon className="w-6 h-6" strokeWidth={isActive ? 2.5 : 2} />
               </Link>
             );

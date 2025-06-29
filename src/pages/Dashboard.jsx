@@ -536,7 +536,7 @@ export default function Dashboard({ setPageTitle, setPageActions }) {
               onClick={() => setShowForm(true)}
               variant="default"
               size="icon"
-              className="fixed bottom-[calc(5rem+env(safe-area-inset-bottom))] right-6 z-40 rounded-full bg-blue-600 hover:bg-blue-700 text-white w-14 h-14 flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-8"
+              className="fixed bottom-[calc(5.5rem+env(safe-area-inset-bottom))] right-6 z-40 rounded-full bg-blue-600 hover:bg-blue-700 text-white w-14 h-14 flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-8"
               style={{ boxShadow: '0 15px 20px -3px rgb(0 0 0 / 0.25)' }}
               aria-label="Add New Habit"
             >
