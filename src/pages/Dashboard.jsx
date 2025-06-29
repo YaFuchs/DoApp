@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect, useCallback, useRef } from "react";
+import React, { useState, useEffect, useCallback, useRef, useContext } from "react";
 import { User } from '@/api/entities'; // Import User entity
 import DataManager from "../components/DataManager"; // Import DataManager
 import { Button } from "@/components/ui/button";
@@ -31,8 +31,12 @@ import CelebrationCard from "../components/CelebrationCard";
 import notificationManager from "../components/NotificationManager";
 import ReorderHabitsModal from "../components/ReorderHabitsModal";
 import UnifiedLoader from "../components/UnifiedLoader";
+import { LayoutContext } from "./Layout";
 
 export default function Dashboard({ setPageTitle, setPageActions }) {
+  const { setPageTitle: ctxSetPageTitle, setPageActions: ctxSetPageActions } = useContext(LayoutContext);
+  const pageTitleSetter = setPageTitle || ctxSetPageTitle;
+  const pageActionsSetter = setPageActions || ctxSetPageActions;
   const [habits, setHabits] = useState([]);
   const [completions, setCompletions] = useState([]);
   const [showForm, setShowForm] = useState(false);
@@ -55,9 +59,9 @@ export default function Dashboard({ setPageTitle, setPageActions }) {
 
   useEffect(() => {
     // Set page title and actions for the Layout
-    if (setPageTitle) setPageTitle("Today");
-    if (setPageActions) {
-      setPageActions(
+    if (pageTitleSetter) pageTitleSetter("Today");
+    if (pageActionsSetter) {
+      pageActionsSetter(
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button
@@ -77,7 +81,7 @@ export default function Dashboard({ setPageTitle, setPageActions }) {
         </DropdownMenu>
       );
     }
-  }, [setPageTitle, setPageActions]);
+  }, [pageTitleSetter, pageActionsSetter]);
 
   const loadData = useCallback(async () => { // Renamed from loadLocalData and made async
     setIsLoading(true);

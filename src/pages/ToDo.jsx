@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { User } from "@/api/entities";
 import DataManager from "../components/DataManager";
 import { Button } from "@/components/ui/button";
@@ -20,6 +20,7 @@ import TabManagementModal from "../components/todo/TabManagementModal";
 import AddTabModal from "../components/todo/AddTabModal";
 import { calculateSortValue, mapEnumsToValues } from "../components/todo/sortValueCalculator";
 import UnifiedLoader from "../components/UnifiedLoader";
+import { LayoutContext } from "./Layout";
 
 const DEFAULT_TODO_SETTINGS = {
   cardFields: {
@@ -62,6 +63,9 @@ const isDoneToday = (doneDate) => {
 };
 
 export default function ToDo({ setPageTitle, setPageActions }) {
+  const { setPageTitle: ctxSetPageTitle, setPageActions: ctxSetPageActions } = useContext(LayoutContext);
+  const pageTitleSetter = setPageTitle || ctxSetPageTitle;
+  const pageActionsSetter = setPageActions || ctxSetPageActions;
   const [tasks, setTasks] = useState([]);
   const [tabs, setTabs] = useState([]);
   const [activeTab, setActiveTab] = useState(null);
@@ -77,11 +81,11 @@ export default function ToDo({ setPageTitle, setPageActions }) {
 
   useEffect(() => {
     // Set page title and actions for the Layout
-    if (setPageTitle) {
-      setPageTitle(activeTab ? activeTab.name : "ToDo");
+    if (pageTitleSetter) {
+      pageTitleSetter(activeTab ? activeTab.name : "ToDo");
     }
-    if (setPageActions) {
-      setPageActions(
+    if (pageActionsSetter) {
+      pageActionsSetter(
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button
@@ -101,7 +105,7 @@ export default function ToDo({ setPageTitle, setPageActions }) {
         </DropdownMenu>
       );
     }
-  }, [setPageTitle, setPageActions, activeTab]);
+  }, [pageTitleSetter, pageActionsSetter, activeTab]);
 
   // Add a more controlled settings update listener
   useEffect(() => {
