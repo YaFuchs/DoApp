@@ -217,7 +217,7 @@ export default function TabManagementModal({ isOpen, onClose, tabs, onSaveTabs }
                                     animate={{ opacity: 1, x: 0 }}
                                     exit={{ opacity: 0, x: 40 }}
                                     transition={{ type: 'tween', duration: 0.2 }}
-                                    className="absolute inset-y-0 right-0 flex items-center pr-4 bg-red-500 rounded-lg z-0"
+                                    className="absolute inset-y-0 right-0 flex justify-end items-center pr-4 pl-6 bg-red-500 rounded-lg z-0"
                                   >
                                     <button
                                       onClick={() => confirmDelete(tab)}
