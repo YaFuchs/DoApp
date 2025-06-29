@@ -10,6 +10,7 @@ export default function TabManagementModal({ isOpen, onClose, tabs, onSaveTabs }
   const [hiddenTabs, setHiddenTabs] = useState([]);
   const [originalTabsState, setOriginalTabsState] = useState(null);
   const [hasChanges, setHasChanges] = useState(false);
+  const [confirmingDeleteTabId, setConfirmingDeleteTabId] = useState(null);
 
   useEffect(() => {
     if (isOpen && tabs.length > 0) {
@@ -54,6 +55,19 @@ export default function TabManagementModal({ isOpen, onClose, tabs, onSaveTabs }
     }));
 
     setActiveTabs(reorderedTabs);
+  };
+
+  const startDelete = (tabId) => {
+    setConfirmingDeleteTabId(tabId);
+  };
+
+  const cancelDelete = () => {
+    setConfirmingDeleteTabId(null);
+  };
+
+  const confirmDelete = (tab) => {
+    handleDeleteTab(tab);
+    setConfirmingDeleteTabId(null);
   };
 
   const handleDeleteTab = (tabToDelete) => {
@@ -163,39 +177,68 @@ export default function TabManagementModal({ isOpen, onClose, tabs, onSaveTabs }
                       }`}
                     >
                       {activeTabs.map((tab, index) => (
-                        <Draggable key={tab.id} draggableId={tab.id} index={index}>
+                        <Draggable
+                          key={tab.id}
+                          draggableId={tab.id}
+                          index={index}
+                          isDragDisabled={confirmingDeleteTabId === tab.id}
+                        >
                           {(provided, snapshot) => (
                             <div
                               ref={provided.innerRef}
                               {...provided.draggableProps}
-                              className={`
-                                flex items-center gap-3 p-3 bg-white border border-slate-200 rounded-lg
-                                ${snapshot.isDragging ? 'shadow-lg rotate-2' : 'shadow-sm'}
-                              `}
+                              className="relative"
                             >
-                              <div
-                                {...provided.dragHandleProps}
-                                className="text-slate-400 hover:text-slate-600 cursor-grab active:cursor-grabbing"
-                              >
-                                <GripVertical className="w-4 h-4" />
-                              </div>
-
-                              <span className="flex-1 font-medium text-slate-900">{tab.name}</span>
-
-                              <span className="text-xs text-slate-500 bg-slate-100 px-2 py-1 rounded">
-                                {tab.type}
-                              </span>
-
-                              {tab.name !== 'Inbox' && (
-                                <Button
-                                  variant="ghost"
-                                  size="icon"
-                                  onClick={() => handleDeleteTab(tab)}
-                                  className="w-8 h-8 text-red-500 hover:text-red-700 hover:bg-red-50"
-                                >
-                                  <Trash2 className="w-4 h-4" />
-                                </Button>
+                              {confirmingDeleteTabId === tab.id && (
+                                <div className="absolute inset-0 flex justify-end items-center pr-4 bg-red-500 rounded-lg z-10">
+                                  <button
+                                    onClick={() => confirmDelete(tab)}
+                                    className="text-white text-sm font-medium px-2 py-1"
+                                    aria-label={`Approve delete ${tab.name}`}
+                                  >
+                                    Approve Delete
+                                  </button>
+                                </div>
                               )}
+                              <motion.div
+                                className={`flex items-center gap-3 p-3 bg-white border border-slate-200 rounded-lg ${snapshot.isDragging ? 'shadow-lg rotate-2' : 'shadow-sm'}`}
+                                animate={{ x: confirmingDeleteTabId === tab.id ? -120 : 0 }}
+                                transition={{ type: 'tween', duration: 0.2 }}
+                                onClick={() => {
+                                  if (confirmingDeleteTabId === tab.id) cancelDelete();
+                                }}
+                                onKeyDown={(e) => {
+                                  if (e.key === 'Escape' && confirmingDeleteTabId === tab.id) {
+                                    cancelDelete();
+                                  }
+                                }}
+                                tabIndex={confirmingDeleteTabId === tab.id ? 0 : -1}
+                              >
+                                <div
+                                  {...provided.dragHandleProps}
+                                  className="text-slate-400 hover:text-slate-600 cursor-grab active:cursor-grabbing"
+                                >
+                                  <GripVertical className="w-4 h-4" />
+                                </div>
+
+                                <span className="flex-1 font-medium text-slate-900">{tab.name}</span>
+
+                                <span className="text-xs text-slate-500 bg-slate-100 px-2 py-1 rounded">
+                                  {tab.type}
+                                </span>
+
+                                {tab.name !== 'Inbox' && (
+                                  <Button
+                                    variant="ghost"
+                                    size="icon"
+                                    onClick={() => startDelete(tab.id)}
+                                    className={`w-8 h-8 text-red-500 hover:text-red-700 hover:bg-red-50 ${confirmingDeleteTabId === tab.id ? 'invisible' : ''}`}
+                                    aria-label={`Delete ${tab.name}`}
+                                  >
+                                    <Trash2 className="w-4 h-4" />
+                                  </Button>
+                                )}
+                              </motion.div>
                             </div>
                           )}
                         </Draggable>
