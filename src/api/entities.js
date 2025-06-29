@@ -229,7 +229,35 @@ export const UserHabit = authDisabled
 
 // ⚠️ Still makes real API calls even when auth is disabled
 // UserHabitCompletion entity
-let mockCompletions = [];
+
+// Generate mock completions for the current week so the dashboard
+// has data to visualize in offline mode.
+const generateMockCompletions = () => {
+  const completions = [];
+  const today = new Date();
+
+  for (const habit of mockHabits) {
+    for (let i = 0; i < 3; i++) {
+      const date = new Date(today);
+      date.setDate(today.getDate() - i);
+      const dateStr = date.toISOString().split('T')[0];
+
+      completions.push({
+        id: `mock-${habit.id}-c${i}`,
+        user_habit_id: habit.id,
+        completion_date: dateStr,
+        progress_count: 1,
+        completed: true,
+        created_date: date.toISOString(),
+        updated_date: date.toISOString(),
+      });
+    }
+  }
+
+  return completions;
+};
+
+let mockCompletions = generateMockCompletions();
 
 export const UserHabitCompletion = authDisabled
   ? {
