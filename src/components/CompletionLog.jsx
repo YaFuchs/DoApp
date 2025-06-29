@@ -51,7 +51,7 @@ export default function CompletionLog({ habit, initialCompletions, weekStart, on
   }, [habit, allCompletions, weekStart]);
 
   const formatCompletionParts = (completion) => {
-    const dateToFormat = completion.created_date || completion.completion_date;
+    const dateToFormat = completion.completion_date || completion.created_date;
     const date = new Date(dateToFormat);
     
     const datePart = date.toLocaleDateString('en-US', {
@@ -78,7 +78,7 @@ export default function CompletionLog({ habit, initialCompletions, weekStart, on
       // Update completions state for display (only completed ones, sorted)
       const displayCompletions = currentHabitCompletions
         .filter(c => c.completed) // Only completed ones for display in the log
-        .sort((a, b) => new Date(b.created_date || b.completion_date) - new Date(a.created_date || a.completion_date));
+        .sort((a, b) => new Date(b.completion_date || b.created_date) - new Date(a.completion_date || a.created_date));
       
       setCompletions(displayCompletions);
 
@@ -112,7 +112,7 @@ export default function CompletionLog({ habit, initialCompletions, weekStart, on
 
   const handleEditLog = (completion) => {
     setEditingCompletion(completion);
-    const completionDate = new Date(completion.created_date || completion.completion_date);
+    const completionDate = new Date(completion.completion_date || completion.created_date);
     setFormData({
       date: completionDate.toLocaleDateString('en-CA'),
       time: completionDate.toTimeString().slice(0, 5)
@@ -153,7 +153,7 @@ export default function CompletionLog({ habit, initialCompletions, weekStart, on
   
   const hasFormChanges = () => {
     if (!editingCompletion) return false;
-    const originalDate = new Date(editingCompletion.created_date || editingCompletion.completion_date);
+    const originalDate = new Date(editingCompletion.completion_date || editingCompletion.created_date);
     const originalDateStr = originalDate.toLocaleDateString('en-CA');
     const originalTimeStr = originalDate.toTimeString().slice(0, 5);
     return formData.date !== originalDateStr || formData.time !== originalTimeStr;
@@ -179,7 +179,7 @@ export default function CompletionLog({ habit, initialCompletions, weekStart, on
     };
     
     const grouped = completions.reduce((acc, completion) => {
-        const completionDate = new Date(completion.created_date || completion.completion_date);
+        const completionDate = new Date(completion.completion_date || completion.created_date);
         const weekStartKey = getWeekStartForDate(completionDate).toISOString();
         if (!acc[weekStartKey]) acc[weekStartKey] = [];
         acc[weekStartKey].push(completion);
@@ -189,8 +189,8 @@ export default function CompletionLog({ habit, initialCompletions, weekStart, on
     // Sort completions within each week by date (latest first)
     Object.keys(grouped).forEach(weekKey => {
       grouped[weekKey].sort((a, b) => {
-        const dateA = new Date(a.created_date || a.completion_date);
-        const dateB = new Date(b.created_date || b.completion_date);
+        const dateA = new Date(a.completion_date || a.created_date);
+        const dateB = new Date(b.completion_date || b.created_date);
         return dateB - dateA; // Latest first
       });
     });
