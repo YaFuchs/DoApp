@@ -1,14 +1,19 @@
 import { base44 } from './base44Client';
 
 
+// ⚠️ Still makes real API calls even when auth is disabled
 export const Task = base44.entities.Task;
 
+// ⚠️ Still makes real API calls even when auth is disabled
 export const Tab = base44.entities.Tab;
 
+// ⚠️ Still makes real API calls even when auth is disabled
 export const UserHabit = base44.entities.UserHabit;
 
+// ⚠️ Still makes real API calls even when auth is disabled
 export const UserHabitCompletion = base44.entities.UserHabitCompletion;
 
+// ⚠️ Still makes real API calls even when auth is disabled
 export const UserSettings = base44.entities.UserSettings;
 
 
@@ -29,6 +34,7 @@ const devUser = {
 const isDev = import.meta.env.DEV;
 const disableAuth = isDev || import.meta.env.VITE_DISABLE_AUTH === 'true';
 
+// ✅ Returns a mock user and stubs login/logout when auth is disabled
 export const User = disableAuth
   ? {
       async me() {

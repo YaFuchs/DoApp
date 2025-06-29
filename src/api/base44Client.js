@@ -6,9 +6,11 @@ import { createClient } from '@base44/sdk';
 // behaviour can also be toggled explicitly via the VITE_DISABLE_AUTH env
 // variable.
 const isDev = import.meta.env.DEV;
+// When true, Base44 client will not require an auth token.
 const disableAuth = isDev || import.meta.env.VITE_DISABLE_AUTH === 'true';
 
 export const base44 = createClient({
   appId: "685939ed073c7630dbe69779",
+  // Skip auth requirement in dev/offline mode
   requiresAuth: !disableAuth
 });
