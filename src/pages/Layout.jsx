@@ -10,7 +10,7 @@ import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/co
 import WeekStartBottomSheet from "../components/WeekStartBottomSheet";
 import NotificationConfirmDialog from "../components/NotificationConfirmDialog";
 import notificationManager from "../components/NotificationManager";
-import { LayoutList, CheckSquare, Menu, UserCircle2, X } from "lucide-react";
+import { CheckSquare, Flame, Menu, UserCircle2, X } from "lucide-react";
 import SettingsModal from "../components/SettingsModal"; // Assuming SettingsModal is in components
 import StatisticsModal from "../components/StatisticsModal"; // Import the new modal
 
@@ -21,7 +21,7 @@ export const LayoutContext = createContext({
 });
 
 const navItems = [
-  { href: "/Dashboard", icon: LayoutList, label: "Habits" },
+  { href: "/Dashboard", icon: Flame, label: "Habits" },
   { href: "/ToDo", icon: CheckSquare, label: "ToDo" },
 ];
 
@@ -210,13 +210,12 @@ export default function Layout({ children, currentPageName }) {
 
       {/* Bottom Navigation */}
       <div className="fixed bottom-0 left-0 right-0 h-safe-bottom bg-white border-t border-slate-200 z-40">
-        <div className="flex justify-around items-center h-16">
+        <div className="flex justify-around items-center h-[72px]">
           {navItems.map((item) => {
             const isActive = location.pathname === item.href || (item.href === "/Dashboard" && location.pathname === "/");
             return (
               <Link key={item.label} to={item.href} className={`flex flex-col items-center justify-center w-full h-full transition-colors duration-200 ${isActive ? 'text-blue-600' : 'text-slate-500 hover:text-blue-500'}`}>
                 <item.icon className="w-6 h-6" strokeWidth={isActive ? 2.5 : 2} />
-                <span className={`mt-1 text-xs font-medium ${isActive ? 'font-semibold' : ''}`}>{item.label}</span>
               </Link>
             );
           })}
