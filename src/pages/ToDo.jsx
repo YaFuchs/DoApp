@@ -190,6 +190,7 @@ export default function ToDo({ setPageTitle, setPageActions }) {
         { name: 'Inbox', type: 'Preset' },
         { name: 'Today', type: 'Preset' },
         { name: 'Tomorrow', type: 'Preset' },
+        { name: 'Done', type: 'Preset' },
         { name: 'Archive', type: 'Preset' }
       ];
 

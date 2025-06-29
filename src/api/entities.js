@@ -45,7 +45,8 @@ let mockTabs = [
   { id: 'mock-tab-2', name: 'Today', sort_order: 1, type: 'Preset' },
   { id: 'mock-tab-3', name: 'Tomorrow', sort_order: 2, type: 'Preset' },
   { id: 'mock-tab-4', name: 'Archive', sort_order: 3, type: 'Preset' },
-  { id: 'mock-tab-5', name: 'Upcoming', sort_order: 4, type: 'Custom' },
+  { id: 'mock-tab-5', name: 'Done', sort_order: 4, type: 'Preset' },
+  { id: 'mock-tab-6', name: 'Upcoming', sort_order: 5, type: 'Custom' },
 ];
 
 export const Tab = authDisabled
