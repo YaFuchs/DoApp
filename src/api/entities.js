@@ -1,5 +1,7 @@
 import { base44 } from './base44Client';
 
+const authDisabled = import.meta.env.VITE_DISABLE_AUTH === 'true';
+
 
 // ⚠️ Still makes real API calls even when auth is disabled
 export const Task = base44.entities.Task;
@@ -7,8 +9,63 @@ export const Task = base44.entities.Task;
 // ⚠️ Still makes real API calls even when auth is disabled
 export const Tab = base44.entities.Tab;
 
-// ⚠️ Still makes real API calls even when auth is disabled
-export const UserHabit = base44.entities.UserHabit;
+// UserHabit entity
+let mockHabits = [
+  {
+    id: 'mock-1',
+    name: 'Drink Water',
+    emoji: '💧',
+    frequency: 'Daily',
+    created_date: new Date().toISOString(),
+    updated_date: new Date().toISOString(),
+  },
+  {
+    id: 'mock-2',
+    name: 'Read Book',
+    emoji: '📚',
+    frequency: 'Daily',
+    created_date: new Date().toISOString(),
+    updated_date: new Date().toISOString(),
+  },
+];
+
+export const UserHabit = authDisabled
+  ? {
+      async getHabits() {
+        return mockHabits;
+      },
+      async createHabit(habitData) {
+        const newHabit = {
+          ...habitData,
+          id: `mock-${Date.now()}`,
+          created_date: new Date().toISOString(),
+          updated_date: new Date().toISOString(),
+        };
+        mockHabits.push(newHabit);
+        return newHabit;
+      },
+      async updateHabit(id, changes) {
+        const index = mockHabits.findIndex((h) => h.id === id);
+        if (index !== -1) {
+          mockHabits[index] = {
+            ...mockHabits[index],
+            ...changes,
+            updated_date: new Date().toISOString(),
+          };
+        }
+        return true;
+      },
+      async deleteHabit(id) {
+        mockHabits = mockHabits.filter((h) => h.id !== id);
+        return true;
+      },
+    }
+  : {
+      getHabits: () => base44.entities.UserHabit.get(),
+      createHabit: (data) => base44.entities.UserHabit.create(data),
+      updateHabit: (id, changes) => base44.entities.UserHabit.update(id, changes),
+      deleteHabit: (id) => base44.entities.UserHabit.delete(id),
+    };
 
 // ⚠️ Still makes real API calls even when auth is disabled
 export const UserHabitCompletion = base44.entities.UserHabitCompletion;
