@@ -365,8 +365,9 @@ export default function ToDo({ setPageTitle, setPageActions }) {
     };
     
     try {
-        const createdTask = await DataManager.createTask(newTaskData);
-        setTasks(prevTasks => [createdTask, ...prevTasks]);
+        await DataManager.createTask(newTaskData);
+        const updatedTasks = await DataManager.getTasks();
+        setTasks(updatedTasks);
     } catch (error) {
         console.error("Failed to create task:", error);
     }
@@ -409,8 +410,9 @@ export default function ToDo({ setPageTitle, setPageActions }) {
       };
       
       const createdTab = await DataManager.createTab(newTab);
-      const updatedTabs = [...tabs, createdTab].sort((a, b) => (a.sort_order || 0) - (b.sort_order || 0));
-      setTabs(updatedTabs);
+      const freshTabs = await DataManager.getTabs();
+      const sortedTabs = freshTabs.sort((a, b) => (a.sort_order || 0) - (b.sort_order || 0));
+      setTabs(sortedTabs);
       setActiveTab(createdTab);
       setShowAddTab(false);
     } catch (error) {

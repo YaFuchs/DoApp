@@ -355,13 +355,13 @@ export default function Dashboard({ setPageTitle, setPageActions }) {
     
     try {
       const createdHabit = await DataManager.createHabit(newHabit);
-      
+
       if (habitData.reminder_enabled && habitData.reminder_time) {
         await handleReminderToggle(createdHabit.id, createdHabit.name, createdHabit.emoji, createdHabit.reminder_time, true);
       }
-      
-      const updatedHabits = [...habits, createdHabit];
-      setHabits(updatedHabits);
+
+      const freshHabits = await DataManager.getHabits();
+      setHabits(freshHabits);
       setShowForm(false);
       setEditingHabit(null);
     } catch (error) {
