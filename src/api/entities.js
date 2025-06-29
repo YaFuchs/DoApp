@@ -41,9 +41,11 @@ export const Task = authDisabled
 
 // Tab entity
 let mockTabs = [
-  { id: 'mock-tab-1', name: 'Inbox', sort_order: 0 },
-  { id: 'mock-tab-2', name: 'Today', sort_order: 1 },
-  { id: 'mock-tab-3', name: 'Upcoming', sort_order: 2 },
+  { id: 'mock-tab-1', name: 'Inbox', sort_order: 0, type: 'Preset' },
+  { id: 'mock-tab-2', name: 'Today', sort_order: 1, type: 'Preset' },
+  { id: 'mock-tab-3', name: 'Tomorrow', sort_order: 2, type: 'Preset' },
+  { id: 'mock-tab-4', name: 'Archive', sort_order: 3, type: 'Preset' },
+  { id: 'mock-tab-5', name: 'Upcoming', sort_order: 4, type: 'Custom' },
 ];
 
 export const Tab = authDisabled
@@ -55,9 +57,16 @@ export const Tab = authDisabled
         return mockTabs;
       },
       async create(data) {
+        // Prevent duplicates by name
+        const existing = mockTabs.find((t) => t.name === data.name);
+        if (existing) {
+          return existing;
+        }
+
         const newTab = {
           ...data,
           id: `mock-${Date.now()}`,
+          type: data.type || 'Custom',
         };
         mockTabs.push(newTab);
         return newTab;
