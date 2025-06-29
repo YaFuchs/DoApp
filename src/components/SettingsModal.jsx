@@ -260,7 +260,7 @@ export default function SettingsModal({ isOpen, onClose, onSettingsSaved }) {
                 <h2 className="text-xl font-semibold text-slate-900 mb-4">Task Sorting</h2>
                 <p className="text-slate-600 text-sm mb-6">Choose how tasks are prioritized and sorted</p>
                 <div className="space-y-4">
-                  <div className="flex items-center justify-between">
+                  <div className="space-y-2">
                     <Label htmlFor="capacity-calculation" className="text-base">
                       Capacity Calculation Method
                     </Label>
