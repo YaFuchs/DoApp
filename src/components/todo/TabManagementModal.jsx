@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { GripVertical, Trash2, Plus, ArrowLeft } from "lucide-react";
@@ -11,6 +11,7 @@ export default function TabManagementModal({ isOpen, onClose, tabs, onSaveTabs }
   const [originalTabsState, setOriginalTabsState] = useState(null);
   const [hasChanges, setHasChanges] = useState(false);
   const [confirmingDeleteTabId, setConfirmingDeleteTabId] = useState(null);
+  const tabRefs = useRef({});
 
   useEffect(() => {
     if (isOpen && tabs.length > 0) {
@@ -88,6 +89,23 @@ export default function TabManagementModal({ isOpen, onClose, tabs, onSaveTabs }
     const newSortOrder = Math.max(...activeTabs.map(t => t.sort_order || 0), 0) + 1;
     setActiveTabs([...activeTabs, { ...tabToRestore, hidden: false, sort_order: newSortOrder }]);
   };
+
+  // Close delete confirmation when clicking outside the confirming tab
+  useEffect(() => {
+    if (!confirmingDeleteTabId) return;
+
+    const handleMouseDown = (e) => {
+      const currentRef = tabRefs.current[confirmingDeleteTabId];
+      if (currentRef && !currentRef.contains(e.target)) {
+        cancelDelete();
+      }
+    };
+
+    document.addEventListener('mousedown', handleMouseDown);
+    return () => {
+      document.removeEventListener('mousedown', handleMouseDown);
+    };
+  }, [confirmingDeleteTabId]);
 
   const handleSave = () => {
     if (!hasChanges) {
@@ -185,7 +203,10 @@ export default function TabManagementModal({ isOpen, onClose, tabs, onSaveTabs }
                         >
                           {(provided, snapshot) => (
                             <div
-                              ref={provided.innerRef}
+                              ref={(el) => {
+                                provided.innerRef(el);
+                                tabRefs.current[tab.id] = el;
+                              }}
                               {...provided.draggableProps}
                               className="relative"
                             >
