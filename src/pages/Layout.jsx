@@ -1,6 +1,6 @@
 
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, createContext } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { createPageUrl } from "../utils";
 import { User } from '@/api/entities';
@@ -13,6 +13,12 @@ import notificationManager from "../components/NotificationManager";
 import { LayoutList, CheckSquare, Menu, UserCircle2, X } from "lucide-react";
 import SettingsModal from "../components/SettingsModal"; // Assuming SettingsModal is in components
 import StatisticsModal from "../components/StatisticsModal"; // Import the new modal
+
+// Context for child pages to access layout controls when they are not passed as props
+export const LayoutContext = createContext({
+  setPageTitle: () => {},
+  setPageActions: () => {},
+});
 
 const navItems = [
   { href: "/Dashboard", icon: LayoutList, label: "Habits" },
@@ -135,6 +141,7 @@ export default function Layout({ children, currentPageName }) {
   });
 
   return (
+    <LayoutContext.Provider value={{ setPageTitle, setPageActions }}>
     <div className="min-h-screen bg-[#f4f8fc] flex flex-col">
       {/* Unified App Header */}
       <header className="fixed top-0 left-0 right-0 z-30 bg-[#f4f8fc]/90 backdrop-blur-sm">
@@ -233,6 +240,7 @@ export default function Layout({ children, currentPageName }) {
         onClose={() => setShowStatsModal(false)}
       />
     </div>
+    </LayoutContext.Provider>
   );
 }
 
