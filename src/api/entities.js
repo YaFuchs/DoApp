@@ -15,10 +15,13 @@ let mockTabs = [
 
 export const Tab = authDisabled
   ? {
+      async list() {
+        return mockTabs;
+      },
       async getTabs() {
         return mockTabs;
       },
-      async createTab(data) {
+      async create(data) {
         const newTab = {
           ...data,
           id: `mock-${Date.now()}`,
@@ -26,7 +29,10 @@ export const Tab = authDisabled
         mockTabs.push(newTab);
         return newTab;
       },
-      async updateTab(id, changes) {
+      async createTab(data) {
+        return this.create(data);
+      },
+      async update(id, changes) {
         const index = mockTabs.findIndex((t) => t.id === id);
         if (index !== -1) {
           mockTabs[index] = {
@@ -34,11 +40,17 @@ export const Tab = authDisabled
             ...changes,
           };
         }
+        return mockTabs.find((t) => t.id === id) || null;
+      },
+      async updateTab(id, changes) {
+        return this.update(id, changes);
+      },
+      async delete(id) {
+        mockTabs = mockTabs.filter((t) => t.id !== id);
         return true;
       },
       async deleteTab(id) {
-        mockTabs = mockTabs.filter((t) => t.id !== id);
-        return true;
+        return this.delete(id);
       },
     }
   : {
@@ -53,10 +65,13 @@ let mockTasks = [];
 
 export const UserTask = authDisabled
   ? {
+      async list() {
+        return mockTasks;
+      },
       async getTasks() {
         return mockTasks;
       },
-      async createTask(data) {
+      async create(data) {
         const newTask = {
           ...data,
           id: `mock-${Date.now()}`,
@@ -66,7 +81,10 @@ export const UserTask = authDisabled
         mockTasks.push(newTask);
         return newTask;
       },
-      async updateTask(id, changes) {
+      async createTask(data) {
+        return this.create(data);
+      },
+      async update(id, changes) {
         const index = mockTasks.findIndex((t) => t.id === id);
         if (index !== -1) {
           mockTasks[index] = {
@@ -74,12 +92,19 @@ export const UserTask = authDisabled
             ...changes,
             updated_date: new Date().toISOString(),
           };
+          return mockTasks[index];
         }
+        return null;
+      },
+      async updateTask(id, changes) {
+        return this.update(id, changes);
+      },
+      async delete(id) {
+        mockTasks = mockTasks.filter((t) => t.id !== id);
         return true;
       },
       async deleteTask(id) {
-        mockTasks = mockTasks.filter((t) => t.id !== id);
-        return true;
+        return this.delete(id);
       },
     }
   : {
@@ -117,16 +142,6 @@ export const UserHabit = authDisabled
       async getHabits() {
         return mockHabits;
       },
-      async createHabit(habitData) {
-        const newHabit = {
-          ...habitData,
-          id: `mock-${Date.now()}`,
-          created_date: new Date().toISOString(),
-          updated_date: new Date().toISOString(),
-        };
-        mockHabits.push(newHabit);
-        return newHabit;
-      },
       async create(data) {
         const newHabit = {
           ...data,
@@ -137,7 +152,10 @@ export const UserHabit = authDisabled
         mockHabits.push(newHabit);
         return newHabit;
       },
-      async updateHabit(id, changes) {
+      async createHabit(data) {
+        return this.create(data);
+      },
+      async update(id, changes) {
         const index = mockHabits.findIndex((h) => h.id === id);
         if (index !== -1) {
           mockHabits[index] = {
@@ -145,12 +163,19 @@ export const UserHabit = authDisabled
             ...changes,
             updated_date: new Date().toISOString(),
           };
+          return mockHabits[index];
         }
+        return null;
+      },
+      async updateHabit(id, changes) {
+        return this.update(id, changes);
+      },
+      async delete(id) {
+        mockHabits = mockHabits.filter((h) => h.id !== id);
         return true;
       },
       async deleteHabit(id) {
-        mockHabits = mockHabits.filter((h) => h.id !== id);
-        return true;
+        return this.delete(id);
       },
     }
   : {
@@ -172,7 +197,7 @@ export const UserHabitCompletion = authDisabled
       async getCompletionsByHabit(habitId) {
         return mockCompletions.filter((c) => c.user_habit_id === habitId);
       },
-      async createCompletion(data) {
+      async create(data) {
         const newCompletion = {
           ...data,
           id: `mock-${Date.now()}`,
@@ -182,9 +207,27 @@ export const UserHabitCompletion = authDisabled
         mockCompletions.push(newCompletion);
         return newCompletion;
       },
-      async deleteCompletion(id) {
+      async createCompletion(data) {
+        return this.create(data);
+      },
+      async update(id, changes) {
+        const index = mockCompletions.findIndex((c) => c.id === id);
+        if (index !== -1) {
+          mockCompletions[index] = {
+            ...mockCompletions[index],
+            ...changes,
+            updated_date: new Date().toISOString(),
+          };
+          return mockCompletions[index];
+        }
+        return null;
+      },
+      async delete(id) {
         mockCompletions = mockCompletions.filter((c) => c.id !== id);
         return true;
+      },
+      async deleteCompletion(id) {
+        return this.delete(id);
       },
     }
   : {
@@ -211,6 +254,15 @@ export const UserSettings = authDisabled
       async getSettings() {
         return mockSettings;
       },
+      async create(data) {
+        mockSettings = {
+          id: `mock-${Date.now()}`,
+          created_date: new Date().toISOString(),
+          updated_date: new Date().toISOString(),
+          ...data,
+        };
+        return mockSettings;
+      },
       async update(id, changes) {
         Object.assign(mockSettings, changes);
         return mockSettings;
@@ -221,6 +273,10 @@ export const UserSettings = authDisabled
           ...changes,
         };
         return mockSettings;
+      },
+      async delete(id) {
+        mockSettings = {};
+        return true;
       },
     }
   : base44.entities.UserSettings;
