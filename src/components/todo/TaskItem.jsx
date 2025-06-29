@@ -4,7 +4,7 @@ import { Card } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Badge } from "@/components/ui/badge";
 import { Calendar, Flag, Zap, Timer } from "lucide-react";
-import { format } from "date-fns";
+import { getDueDateInfo } from "@/utils/dateUtils";
 
 const DEFAULT_CARD_SETTINGS = {
   description: false,
@@ -101,12 +101,15 @@ export default function TaskItem({ task, onStatusChange, onEdit, cardSettings = 
               )}
 
               {/* Due Date */}
-              {cardSettings.dueDate && task.dueDate && (
-                <Badge variant="outline">
-                  <Calendar className="w-3 h-3 mr-1" />
-                  {format(new Date(task.dueDate), 'MMM d')}
-                </Badge>
-              )}
+              {cardSettings.dueDate && task.dueDate && (() => {
+                const { label, variant } = getDueDateInfo(task.dueDate);
+                return (
+                  <Badge variant={variant}>
+                    <Calendar className="w-3 h-3 mr-1" />
+                    {label}
+                  </Badge>
+                );
+              })()}
 
               {/* Scheduled Time */}
               {cardSettings.scheduledTime && task.scheduledTime && (
