@@ -111,6 +111,9 @@ let mockHabits = [
 
 export const UserHabit = authDisabled
   ? {
+      async list() {
+        return mockHabits;
+      },
       async getHabits() {
         return mockHabits;
       },
@@ -153,6 +156,9 @@ let mockCompletions = [];
 
 export const UserHabitCompletion = authDisabled
   ? {
+      async list() {
+        return mockCompletions;
+      },
       async getCompletionsByHabit(habitId) {
         return mockCompletions.filter((c) => c.user_habit_id === habitId);
       },
@@ -189,7 +195,14 @@ let mockSettings = {
 
 export const UserSettings = authDisabled
   ? {
+      async list() {
+        return [mockSettings];
+      },
       async getSettings() {
+        return mockSettings;
+      },
+      async update(id, changes) {
+        Object.assign(mockSettings, changes);
         return mockSettings;
       },
       async updateSettings(changes) {
