@@ -2,9 +2,42 @@ import { base44 } from './base44Client';
 
 const authDisabled = import.meta.env.VITE_DISABLE_AUTH === 'true';
 
+// Shared in-memory storage for tasks when auth is disabled
+let mockTasks = [];
 
-// ⚠️ Still makes real API calls even when auth is disabled
-export const Task = base44.entities.Task;
+export const Task = authDisabled
+  ? {
+      async list() {
+        return mockTasks;
+      },
+      async create(data) {
+        const newTask = {
+          ...data,
+          id: `mock-${Date.now()}`,
+          created_date: new Date().toISOString(),
+          updated_date: new Date().toISOString(),
+        };
+        mockTasks.push(newTask);
+        return newTask;
+      },
+      async update(id, changes) {
+        const index = mockTasks.findIndex((t) => t.id === id);
+        if (index !== -1) {
+          mockTasks[index] = {
+            ...mockTasks[index],
+            ...changes,
+            updated_date: new Date().toISOString(),
+          };
+          return mockTasks[index];
+        }
+        return null;
+      },
+      async delete(id) {
+        mockTasks = mockTasks.filter((t) => t.id !== id);
+        return true;
+      },
+    }
+  : base44.entities.Task;
 
 // Tab entity
 let mockTabs = [
@@ -61,7 +94,6 @@ export const Tab = authDisabled
     };
 
 // UserTask entity
-let mockTasks = [];
 
 export const UserTask = authDisabled
   ? {
