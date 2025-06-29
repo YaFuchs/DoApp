@@ -68,7 +68,37 @@ export const UserHabit = authDisabled
     };
 
 // ⚠️ Still makes real API calls even when auth is disabled
-export const UserHabitCompletion = base44.entities.UserHabitCompletion;
+// UserHabitCompletion entity
+let mockCompletions = [];
+
+export const UserHabitCompletion = authDisabled
+  ? {
+      async getCompletionsByHabit(habitId) {
+        return mockCompletions.filter((c) => c.user_habit_id === habitId);
+      },
+      async createCompletion(data) {
+        const newCompletion = {
+          ...data,
+          id: `mock-${Date.now()}`,
+          created_date: new Date().toISOString(),
+          updated_date: new Date().toISOString(),
+        };
+        mockCompletions.push(newCompletion);
+        return newCompletion;
+      },
+      async deleteCompletion(id) {
+        mockCompletions = mockCompletions.filter((c) => c.id !== id);
+        return true;
+      },
+    }
+  : {
+      getCompletionsByHabit: (habitId) =>
+        base44.entities.UserHabitCompletion.getCompletionsByHabit(habitId),
+      createCompletion: (data) =>
+        base44.entities.UserHabitCompletion.createCompletion(data),
+      deleteCompletion: (id) =>
+        base44.entities.UserHabitCompletion.deleteCompletion(id),
+    };
 
 // ⚠️ Still makes real API calls even when auth is disabled
 export const UserSettings = base44.entities.UserSettings;
