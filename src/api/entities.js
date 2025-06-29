@@ -157,24 +157,10 @@ export const UserTask = authDisabled
     };
 
 // UserHabit entity
-let mockHabits = [
-  {
-    id: 'mock-1',
-    name: 'Drink Water',
-    emoji: '💧',
-    frequency: 'Daily',
-    created_date: new Date().toISOString(),
-    updated_date: new Date().toISOString(),
-  },
-  {
-    id: 'mock-2',
-    name: 'Read Book',
-    emoji: '📚',
-    frequency: 'Daily',
-    created_date: new Date().toISOString(),
-    updated_date: new Date().toISOString(),
-  },
-];
+// Start with an empty set of habits when authentication is disabled so that
+// development mode mirrors the production experience. Habits will be added
+// by the user and persisted in memory for the session.
+let mockHabits = [];
 
 export const UserHabit = authDisabled
   ? {
@@ -230,34 +216,9 @@ export const UserHabit = authDisabled
 // ⚠️ Still makes real API calls even when auth is disabled
 // UserHabitCompletion entity
 
-// Generate mock completions for the current week so the dashboard
-// has data to visualize in offline mode.
-const generateMockCompletions = () => {
-  const completions = [];
-  const today = new Date();
-
-  for (const habit of mockHabits) {
-    for (let i = 0; i < 3; i++) {
-      const date = new Date(today);
-      date.setDate(today.getDate() - i);
-      const dateStr = date.toISOString().split('T')[0];
-
-      completions.push({
-        id: `mock-${habit.id}-c${i}`,
-        user_habit_id: habit.id,
-        completion_date: dateStr,
-        progress_count: 1,
-        completed: true,
-        created_date: date.toISOString(),
-        updated_date: date.toISOString(),
-      });
-    }
-  }
-
-  return completions;
-};
-
-let mockCompletions = generateMockCompletions();
+// In development mode we don't seed any completions. As the user marks habits
+// complete these will accumulate in memory just like real API data would.
+let mockCompletions = [];
 
 export const UserHabitCompletion = authDisabled
   ? {
