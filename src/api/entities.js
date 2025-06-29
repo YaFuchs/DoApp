@@ -9,6 +9,47 @@ export const Task = base44.entities.Task;
 // ⚠️ Still makes real API calls even when auth is disabled
 export const Tab = base44.entities.Tab;
 
+// UserTask entity
+let mockTasks = [];
+
+export const UserTask = authDisabled
+  ? {
+      async getTasks() {
+        return mockTasks;
+      },
+      async createTask(data) {
+        const newTask = {
+          ...data,
+          id: `mock-${Date.now()}`,
+          created_date: new Date().toISOString(),
+          updated_date: new Date().toISOString(),
+        };
+        mockTasks.push(newTask);
+        return newTask;
+      },
+      async updateTask(id, changes) {
+        const index = mockTasks.findIndex((t) => t.id === id);
+        if (index !== -1) {
+          mockTasks[index] = {
+            ...mockTasks[index],
+            ...changes,
+            updated_date: new Date().toISOString(),
+          };
+        }
+        return true;
+      },
+      async deleteTask(id) {
+        mockTasks = mockTasks.filter((t) => t.id !== id);
+        return true;
+      },
+    }
+  : {
+      getTasks: () => base44.entities.UserTask.getTasks(),
+      createTask: (data) => base44.entities.UserTask.createTask(data),
+      updateTask: (id, changes) => base44.entities.UserTask.updateTask(id, changes),
+      deleteTask: (id) => base44.entities.UserTask.deleteTask(id),
+    };
+
 // UserHabit entity
 let mockHabits = [
   {
