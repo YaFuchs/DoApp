@@ -141,8 +141,27 @@ export const UserHabitCompletion = authDisabled
         base44.entities.UserHabitCompletion.deleteCompletion(id),
     };
 
-// ⚠️ Still makes real API calls even when auth is disabled
-export const UserSettings = base44.entities.UserSettings;
+// UserSettings entity
+let mockSettings = {
+  dailyReminder: true,
+  startOfWeek: 'Sunday',
+  theme: 'light',
+};
+
+export const UserSettings = authDisabled
+  ? {
+      async getSettings() {
+        return mockSettings;
+      },
+      async updateSettings(changes) {
+        mockSettings = {
+          ...mockSettings,
+          ...changes,
+        };
+        return mockSettings;
+      },
+    }
+  : base44.entities.UserSettings;
 
 
 
