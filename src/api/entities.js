@@ -6,8 +6,47 @@ const authDisabled = import.meta.env.VITE_DISABLE_AUTH === 'true';
 // ⚠️ Still makes real API calls even when auth is disabled
 export const Task = base44.entities.Task;
 
-// ⚠️ Still makes real API calls even when auth is disabled
-export const Tab = base44.entities.Tab;
+// Tab entity
+let mockTabs = [
+  { id: 'mock-tab-1', name: 'Inbox', sort_order: 0 },
+  { id: 'mock-tab-2', name: 'Today', sort_order: 1 },
+  { id: 'mock-tab-3', name: 'Upcoming', sort_order: 2 },
+];
+
+export const Tab = authDisabled
+  ? {
+      async getTabs() {
+        return mockTabs;
+      },
+      async createTab(data) {
+        const newTab = {
+          ...data,
+          id: `mock-${Date.now()}`,
+        };
+        mockTabs.push(newTab);
+        return newTab;
+      },
+      async updateTab(id, changes) {
+        const index = mockTabs.findIndex((t) => t.id === id);
+        if (index !== -1) {
+          mockTabs[index] = {
+            ...mockTabs[index],
+            ...changes,
+          };
+        }
+        return true;
+      },
+      async deleteTab(id) {
+        mockTabs = mockTabs.filter((t) => t.id !== id);
+        return true;
+      },
+    }
+  : {
+      getTabs: () => base44.entities.Tab.list(),
+      createTab: (data) => base44.entities.Tab.create(data),
+      updateTab: (id, changes) => base44.entities.Tab.update(id, changes),
+      deleteTab: (id) => base44.entities.Tab.delete(id),
+    };
 
 // UserTask entity
 let mockTasks = [];
