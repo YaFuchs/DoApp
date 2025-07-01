@@ -18,3 +18,23 @@ npm run build
 ```
 
 For more information and support, please contact Base44 support at app@base44.com.
+
+## Troubleshooting
+
+### `react-native-emoji-selector` not found
+
+If you encounter a build error mentioning that `react-native-emoji-selector` cannot be
+resolved, install the dependency manually:
+
+```bash
+npm install react-native-emoji-selector
+```
+
+or with Yarn:
+
+```bash
+yarn add react-native-emoji-selector
+```
+
+Make sure the package is compatible with your environment (for example Expo managed
+projects) or replace it with an alternative emoji picker if needed.
